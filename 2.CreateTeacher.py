@@ -7,8 +7,8 @@ import os
 fake = Faker('zh_TW')
 
 # 讀取原本的 CSV
-input_path = os.path.join("data", "taiwan_female_100.csv")
-df = pd.read_csv(input_path)
+input_path = os.path.join("Person", "female.xlsx")
+df = pd.read_excel(input_path)
 
 # 準備新欄位
 new_data = []
@@ -18,8 +18,8 @@ for _, row in df.iterrows():
     gender = row["性別"]
     birthday = row["出生年月日"]  # 應該是民國年格式
     id_number = row["身分證字號"]
-    phone = "0" + str(row["手機"])
-    email = row["Email"]
+    phone = "0" + str(row["行動電話"])
+    email = row["電子郵件信箱"]
 
     zip_code = fake.postcode()
     address = fake.address().replace("\n", "")
@@ -55,5 +55,5 @@ columns = [
 
 # 建立 DataFrame 並匯出為 Excel
 output_df = pd.DataFrame(new_data, columns=columns)
-output_df.to_excel("output_講師清單.xlsx", index=False)
-print("Excel 檔案已產生：output_講師清單.xlsx")
+output_df.to_excel("./Teacher/講師清單.xlsx", index=False)
+print("Excel 檔案已產生：講師清單.xlsx")

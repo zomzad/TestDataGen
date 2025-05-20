@@ -1,11 +1,14 @@
-import csv
 import random
-from datetime import datetime, timedelta
+from datetime import datetime
 from faker import Faker
 import os
 import pandas as pd
+import string
 
 fake = Faker("zh_TW")
+
+# 想產生的資料筆數
+num_records = 300
 
 # 身分證英文碼與其對應代碼
 id_prefix_map = {
@@ -25,7 +28,7 @@ def generate_valid_taiwan_id(gender: str):
         code = id_prefix_map[prefix]
         d1, d2 = divmod(code, 10)
         digits = [d1, d2]
-        digits.append(2 if gender == "F" else 1)
+        digits.append(2 if gender == "女" else 1)
         digits += [random.randint(0, 9) for _ in range(6)]
 
         # 計算驗證碼
@@ -39,9 +42,10 @@ def generate_valid_taiwan_id(gender: str):
 
 
 def generate_name():
-    family_names = ["陳", "林", "黃", "張", "李", "王", "吳", "劉", "蔡", "楊"]
-    given_names = ["怡君", "慧琳", "雅婷", "淑芬", "玉珍", "麗華", "佳蓉", "雅惠", "秀琴", "靜怡",
-                   "怡慧", "欣怡", "芳儀", "婉君", "佩珊", "佳慧", "怡君", "欣惠", "君潔", "品如"]
+    family_names = ["翁", "白", "韋", "朱", "阮", "雷", "趙", "黃", "丘", "蕭", "盧", "謝", "段", "甘", "華",
+                    "關", "胡", "柯", "林", "易", "洪", "毛", "殷", "包", "顧", "樊", "姜", "熊", "石", "佘", "姚", "全", "李"]
+    given_names = ["芝訓", "泳如", "恩慧", "楚盈", "得梅", "雯昕", "映凱", "鏡涵", "玲鈴", "予婕", "典鳳", "夏梅", "鬱珍", "詩酉", "雨春", "路瑤", "姝懿", "自若", "柏穎", "佳悅",
+                   "子茜", "穎嘉", "子淇", "詠寧", "頤庭", "湘喻", "薇穎", "聖心", "欣琳", "謹恩", "柔緗", "柳沄", "家恩", "丞麗", "禮萱", "怡鈞", "穎賢", "清怡", "映傑", "偉淇", "薇芩", "嘉湞"]
     return random.choice(family_names) + random.choice(given_names)
 
 # 隨機生成手機號碼
@@ -63,26 +67,21 @@ def generate_birth():
 
 # 產生100筆資料
 data = []
-for i in range(1, 101):
+for i in range(1, num_records+1):
+    now = datetime.now().strftime("%Y%m%d%H%M%S")  # 年月日時分秒
+    rand_str = ''.join(random.choices(
+        string.ascii_lowercase + string.digits, k=5))  # 5碼亂數
+
     name = generate_name()
     gender = "女"
     id_number = generate_valid_taiwan_id(gender)
     birth = generate_birth()
-    email = f"user{i:03}@gmail.com"
+    email = f"user_{now}_{rand_str}@gmail.com"
     phone = generate_phone()
     data.append([name, id_number, gender, birth, email, phone])
-
-# 產生CSV檔案
-file_path = os.path.join("data", "Ttaiwan_female_100.csv")
-with open(file_path, "w", newline="", encoding="utf-8-sig") as f:
-    writer = csv.writer(f)
-    writer.writerow(["姓名", "身分證字號", "性別", "出生年月日", "Email", "手機"])
-    writer.writerows(data)
-
-file_path
 
 # 產出成 Excel
 df = pd.DataFrame(data, columns=["姓名", "身分證字號",
                   "性別", "出生年月日", "電子郵件信箱", "行動電話"])
-output_path = os.path.join("data", "Ttaiwan_female_100.xlsx")
+output_path = os.path.join("Person", "female.xlsx")
 df.to_excel(output_path, index=False, engine="openpyxl")
