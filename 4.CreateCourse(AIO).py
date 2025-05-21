@@ -7,7 +7,7 @@ import random
 # === 檔案設定 ===
 course_file = "./Course/course.xlsx"
 teacher_file = "./Course/teacher.xlsx"
-output_file = "final_course_schedule.xlsx"
+output_file = "./Course/final_course_schedule.xlsx"
 
 # === 日期範圍設定 ===（實際只會選一天）
 start_date = datetime(2025, 8, 1)

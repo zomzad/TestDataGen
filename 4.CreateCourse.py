@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 # === 參數設定 ===
 course_file = "./Course/course.xlsx"
 teacher_file = "./data/taiwan_female_100.csv"
-output_file = "final_course_schedule.xlsx"
+output_file = "./Course/final_course_schedule.xlsx"
 
 start_date = datetime(2024, 8, 1)
 end_date = datetime(2024, 8, 31)
